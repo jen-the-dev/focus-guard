@@ -1,0 +1,78 @@
+name: focus-guard
+version: 0.1.0
+categories:
+  - Misc
+author: Focus Guard Team
+description: Deterministic retry-overload guard for Envoy HTTP streams.
+longDescription: |
+  Focus Guard is a deterministic Rust dynamic module that protects focus during
+  retry spirals by enforcing request throttling when retry attempts exceed a
+  configured threshold.
+
+  ## Features
+
+  * **Deterministic retry guard**: Reads `x-envoy-attempt-count` and blocks
+    overload traffic once the configured threshold is reached.
+  * **Safe defaults**: Uses conservative defaults for threshold, status code,
+    and response body.
+  * **Metrics-ready**: Defines counters/histograms through Envoy config-scoped
+    metric APIs when available.
+  * **Callback-safe AI decisions**: Optional `enable_tars` triggers asynchronous
+    TARS HTTP callouts via Envoy APIs and resumes stream processing on response.
+
+  ## Configuration
+
+  Configure the extension with a JSON object:
+  - `retry_threshold`: Retry-attempt threshold that triggers local throttling
+    (default: `3`)
+  - `overload_status_code`: HTTP status code for local overload response
+    (default: `429`)
+  - `overload_body`: Plain-text body for local overload response
+    (default: `"Focus Guard throttled request due to retry overload."`)
+  - `enable_tars`: Enables asynchronous TARS decision callouts (default: `false`)
+  - `tars_cluster`: Envoy cluster name for the TARS API callout
+    (default: `\"api.router.tetrate.ai:443\"`)
+  - `tars_authority`: Host/authority header sent to TARS
+    (default: `\"api.router.tetrate.ai\"`)
+  - `tars_path`: HTTP path for TARS decision requests
+    (default: `\"/v1/chat/completions\"`)
+  - `tars_model`: Model identifier in the request payload
+    (default: `\"o3-mini\"`)
+  - `tars_timeout_milliseconds`: Async callout timeout in milliseconds
+    (default: `250`)
+  - `tars_fail_open`: Whether to continue requests when TARS is unavailable or
+    returns an invalid decision (default: `true`)
+  - `tars_api_key`: Optional bearer token injected into the callout
+
+  ## Building
+
+  This is a Rust dynamic module that must be compiled to a shared library.
+
+  ```bash
+  cargo build --release
+  ```
+
+  The compiled library will be at `target/release/libfocus_guard.{so,dylib}`
+tags:
+  - rust
+  - dynamic-module
+  - http
+  - filter
+license: Apache-2.0
+type: rust
+filterType: http
+examples:
+  - title: Basic Usage
+    description: Run the extension with default configuration
+    code: |
+      boe run --extension focus-guard
+  - title: Retry threshold configuration
+    description: Configure deterministic overload behavior
+    code: |
+      boe run --extension focus-guard --config '
+        {
+          "retry_threshold": 3,
+          "overload_status_code": 429,
+          "overload_body": "Focus Guard: please pause and retry later.",
+          "enable_tars": false
+        }'

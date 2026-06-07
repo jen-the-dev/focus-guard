@@ -1,0 +1,13 @@
+# macOS metadata
+.DS_Store
+
+# Rust build outputs
+/target/
+
+# Local runtime artifacts
+*.log
+
+# Submission artifacts (independent of GitHub repo)
+/submission-package/
+/focus-guard-submission-package.zip
+*.mov
