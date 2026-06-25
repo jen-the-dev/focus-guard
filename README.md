@@ -215,3 +215,50 @@ Unit tests currently cover:
 The current scope provides deterministic safety by default and optional AI-assisted throttling through callback-safe asynchronous TARS callouts.
 ## License
 Apache-2.0
+
+
+## Solution
+A Rust Envoy dynamic module that applies deterministic retry throttling and observable pass/throttle behavior.
+
+## Architecture Diagram
+```mermaid
+flowchart LR
+  Client --> Envoy["Envoy + Focus Guard"]
+  Envoy --> Decision{"Retry threshold reached?"}
+  Decision -- Yes --> Throttle["Local overload response"]
+  Decision -- No --> Upstream["Forward request"]
+  Envoy --> Metrics["Counters / headers / metadata"]
+```
+
+## Tech Stack
+- Rust
+- Envoy dynamic module
+- Built On Envoy CLI
+- Observability instrumentation
+
+## Setup Instructions
+```bash
+cargo test
+boe run --local .
+```
+
+## Testing
+- cargo test
+- curl request simulations with x-envoy-attempt-count header
+
+## ANZSCO 261312 Competency Evidence
+- Systems programming for reliability controls.
+- Operational tooling with deterministic behavior under load.
+- Testing and observability for incident response workflows.
+
+## Commit Convention
+Use Conventional Commits for presentation clarity:
+- `feat(scope): add new user-facing capability`
+- `fix(scope): resolve functional defect`
+- `test(scope): add or improve automated tests`
+- `docs(readme): improve project documentation`
+
+## Evidence Map
+- `src/`
+- `STORYBOARD.md`
+- `Cargo.toml`
