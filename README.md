@@ -4,10 +4,9 @@ Focus Guard is a Rust dynamic module for Envoy that enforces deterministic retry
 It is designed for high-pressure incident paths where teams need behavior that is predictable, inspectable, and easy to reason about.
 
 
-## ANZSCO 261312 Skills Snapshot
-- Systems-level programming in Rust for production traffic control behavior.
-- Reliability engineering through deterministic retry-throttling design.
-- Operational observability and test-driven validation for incident workflows.
+## Shipped for
+- Tetrate Buildathon — Human-Focused AI Award track
+- Production-style Rust/Envoy dynamic module with tests and demo storyboard
 
 ## Quick Start
 ### 1) Prerequisites
@@ -251,11 +250,6 @@ boe run --local .
 ## Testing
 - cargo test
 - curl request simulations with x-envoy-attempt-count header
-
-## ANZSCO 261312 Competency Evidence
-- Systems programming for reliability controls.
-- Operational tooling with deterministic behavior under load.
-- Testing and observability for incident response workflows.
 
 ## Commit Convention
 Use Conventional Commits for presentation clarity:
